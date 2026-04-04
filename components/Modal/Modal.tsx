@@ -9,50 +9,32 @@ interface ModalProps {
   onClose: () => void;
 }
 
-const modalRoot = document.body;
-
 export default function Modal({ children, onClose }: ModalProps) {
-  // Escape
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
-
-  useEffect(() => {
-    // зберігаємо попереднє значення
-    const originalOverflow = document.body.style.overflow;
-
-    // блокуємо скрол
+    // блок scroll
     document.body.style.overflow = "hidden";
 
-    return () => {
-      // повертаємо назад
-      document.body.style.overflow = originalOverflow;
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
     };
-  }, []);
 
-  // Backdrop click
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      document.body.style.overflow = "";
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
+  // ✅ перевірка на браузер
+  if (typeof window === "undefined") return null;
 
   return createPortal(
-    <div
-      className={css.backdrop}
-      role="dialog"
-      aria-modal="true"
-      onClick={handleBackdropClick}
-    >
-      <div className={css.modal}>{children}</div>
+    <div className={css.backdrop} onClick={onClose}>
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
+        {children}
+      </div>
     </div>,
-    modalRoot,
+    document.body,
   );
 }
