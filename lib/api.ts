@@ -50,6 +50,6 @@ export const deleteNote = async (id: string): Promise<Note> => {
 
 // 🔹 Отримання нотатки за ID
 export const fetchNoteById = async (id: string): Promise<Note> => {
-  const res = await axios.get<Note>(`/notes/${id}`);
+  const res = await api.get<Note>(`/notes/${id}`);
   return res.data;
 };
