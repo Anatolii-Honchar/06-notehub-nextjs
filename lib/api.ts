@@ -3,9 +3,11 @@ import { Note } from "@/types/note";
 
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
-  headers: {
-    Authorization: `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`,
-  },
+});
+
+api.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_NOTEHUB_TOKEN}`;
+  return config;
 });
 
 // 🔹 Типи
