@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Note } from "../types/note";
+import { Note } from "@/types/note";
 
 const api = axios.create({
   baseURL: "https://notehub-public.goit.study/api",
@@ -46,4 +46,10 @@ export const createNote = async (payload: CreateNotePayload): Promise<Note> => {
 export const deleteNote = async (id: string): Promise<Note> => {
   const response = await api.delete<Note>(`/notes/${id}`);
   return response.data;
+};
+
+// 🔹 Отримання нотатки за ID
+export const fetchNoteById = async (id: string): Promise<Note> => {
+  const res = await axios.get<Note>(`/notes/${id}`);
+  return res.data;
 };
